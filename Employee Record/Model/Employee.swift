@@ -1,4 +1,10 @@
-
+//
+//  Employee.swift
+//  Employee Record
+//
+//  Created by user on 20/06/20.
+//  Copyright © 2020 user. All rights reserved.
+//
 
 
 import Foundation
@@ -8,10 +14,10 @@ struct EmployeeData : Codable {
 	let username : String?
 	let email : String?
 	let profile_image : String?
-	let address : Address?
+	let address : AddressData?
 	let phone : String?
 	let website : String?
-	let company : Company?
+	let company : CompanyData?
 
 	enum CodingKeys: String, CodingKey {
 
@@ -33,10 +39,10 @@ struct EmployeeData : Codable {
 		username = try values.decodeIfPresent(String.self, forKey: .username)
 		email = try values.decodeIfPresent(String.self, forKey: .email)
 		profile_image = try values.decodeIfPresent(String.self, forKey: .profile_image)
-		address = try values.decodeIfPresent(Address.self, forKey: .address)
+		address = try values.decodeIfPresent(AddressData.self, forKey: .address)
 		phone = try values.decodeIfPresent(String.self, forKey: .phone)
 		website = try values.decodeIfPresent(String.self, forKey: .website)
-		company = try values.decodeIfPresent(Company.self, forKey: .company)
+		company = try values.decodeIfPresent(CompanyData.self, forKey: .company)
 	}
 
 }

@@ -2,7 +2,7 @@
 //  EmployeeViewModel.swift
 //  Checking MVVM
 //
-//  Created by user on 19/06/20.
+//  Created by user on 20/06/20.
 //  Copyright © 2020 user. All rights reserved.
 //
 
@@ -11,13 +11,15 @@ import UIKit
 class EmployeeViewModel {
 
     var employeeName: String?
-    var employeeAge : String?
-    var employeeSal : String?
+    var profileImage : String?
+    var companyName : String?
+    var dataModel : Employee?
     
-    init(name:String?,age:String?,salary:String?) {
-        self.employeeName = name
-        self.employeeAge = age
-        self.employeeSal = salary
+    init(employeeModel:Employee) {
+        self.dataModel = employeeModel
+        self.employeeName = employeeModel.name
+        self.companyName = employeeModel.company?.name
+        self.profileImage = employeeModel.profile_image
     }
     
 }

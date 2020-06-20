@@ -7,9 +7,6 @@
 //
 
 import Foundation
-import Alamofire
-
-
 
 class ApiManager {
     

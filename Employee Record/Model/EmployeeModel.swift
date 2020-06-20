@@ -8,41 +8,42 @@
 
 import Foundation
 protocol EmployeeModelProtocol {
-    func fetchEmployee(completion: @escaping (Result<[Employees], Error>) -> Void)
-    func searchForEmployee(withName name:String) -> [Employees]?
-    var employees:[Employees]? {get set}
+    func fetchEmployee(completion: @escaping (Result<[Employee], Error>) -> Void)
+    func searchForEmployee(withKey key:String) -> [Employee]?
+    var employees:[Employee]? {get set}
+    
     
 }
 class EmployeeModel:EmployeeModelProtocol {
-    var employees: [Employees]?
-    
-    func searchForEmployee(withName name: String) -> [Employees]? {
-        if name.count > 0 {
-            return employees?.filter({($0.employee_name?.lowercased().contains(name))!})
+    var employees: [Employee]?
+    let kbaseUrl = "http://www.mocky.io/v2/5d565297300000680030a986";
+    func searchForEmployee(withKey key: String) -> [Employee]? {
+        if key.count > 0 {
+            return employees?.filter({(($0.name?.lowercased().contains(key))! || ($0.email?.lowercased().contains(key))!)})
         } else {
             return employees
         }
     }
-    func fetchEmployee(completion: @escaping (Result<[Employees], Error>) -> Void) {
-        if LocalStorageManager.sharedManager.entityIsEmpty() {
+    func fetchEmployee(completion: @escaping (Result<[Employee], Error>) -> Void) {
+        if EmployeeLocalDBManager.sharedManager.entityIsEmpty() {
             self.getEmployeeFromServer(completion: completion)
         } else {
             self.getEmployeeFromLocal(completion: completion)
         }
     }
-
-   private  func getEmployeeFromServer(completion:@escaping(Result<[Employees],Error>)->Void) {
-        
-        ApiManager.request(endPoint: .Employee) { [weak self] (employees:[Employee]?, error) in
+    
+    private  func getEmployeeFromServer(completion:@escaping(Result<[Employee],Error>)->Void) {
+        guard let url = URL(string: kbaseUrl) else { return }
+        ApiManager.request(url: url) { [weak self] (employees:[EmployeeData]?, error) in
             if error == nil {
                 guard let employeelist = employees else {return}
                 
-                LocalStorageManager.sharedManager.save(employees: employeelist) { (status) in
+                EmployeeLocalDBManager.sharedManager.save(employees: employeelist) { (status) in
                     if status {
                         self?.getEmployeeFromLocal(completion: completion)
                     }
                 }
-               
+                
             } else {
                 completion(.failure(error!))
             }
@@ -50,9 +51,9 @@ class EmployeeModel:EmployeeModelProtocol {
         }
     }
     
-    private func getEmployeeFromLocal(completion:@escaping(Result<[Employees],Error>)->Void) {
+    private func getEmployeeFromLocal(completion:@escaping(Result<[Employee],Error>)->Void) {
         
-        LocalStorageManager.sharedManager.getFromLocal { [weak self] (employees, error) in
+        EmployeeLocalDBManager.sharedManager.getFromLocal { [weak self] (employees, error) in
             if let employees = employees , error == nil {
                 self?.employees = employees
                 completion(.success(employees))

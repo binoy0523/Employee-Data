@@ -6,10 +6,12 @@
 //  Copyright © 2020 user. All rights reserved.
 //
 import UIKit
-
+import SDWebImage
 class EmployeeTableViewCell: UITableViewCell {
 
     @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var companyLabel: UILabel!
+    @IBOutlet weak var profileImage: UIImageView!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -20,7 +22,15 @@ class EmployeeTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    
+//    Setup UI
     func setUp(withEmployeeVM employeeVM:EmployeeViewModel) {
         self.nameLabel.text = employeeVM.employeeName
+        self.companyLabel.text = employeeVM.companyName
+        if let profileImg = employeeVM.profileImage, let imgUrl = URL(string: profileImg) {
+             self.profileImage.sd_setImage(with: imgUrl, placeholderImage:UIImage(named: "placeholder"))
+        }
+
+
     }
 }
